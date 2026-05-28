@@ -20,9 +20,9 @@ import {
 
 const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663706144603/YyyPaUeUb7PywapTaqGYtw/logo-icon-YZXS32RxHwjyradERoQpWj.webp";
 
-const PAD_LABELS = ['Kick', 'Snare', 'Hi-Hat', 'Open Hat', 'Clap', 'Bass', 'Synth', 'Perc'];
-const PAD_INSTRUMENTS: InstrumentType[] = ['kick', 'snare', 'hihat', 'openhat', 'clap', 'bass', 'synth', 'perc'];
-const PAD_COLORS = ['#00D4FF', '#A855F7', '#00FF88', '#FF6B35', '#FFD700', '#FF4488', '#44DDFF', '#88FF44'];
+const PAD_LABELS = ['Kick', 'Snare', 'Hi-Hat', 'Open Hat', 'Clap', 'Bass', 'Synth', 'Perc', 'Guitar', 'Piano'];
+const PAD_INSTRUMENTS: InstrumentType[] = ['kick', 'snare', 'hihat', 'openhat', 'clap', 'bass', 'synth', 'perc', 'guitar', 'piano'];
+const PAD_COLORS = ['#00D4FF', '#A855F7', '#00FF88', '#FF6B35', '#FFD700', '#FF4488', '#44DDFF', '#88FF44', '#FF9933', '#FF33CC'];
 
 // Waveform visualizer bars
 function SpectrumBar({ active, color }: { active: boolean; color: string }) {

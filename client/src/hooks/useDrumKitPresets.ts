@@ -13,7 +13,7 @@ export interface DrumKitPresetConfig {
 
 export interface SoundConfig {
   // Synthesis parameters for each sound
-  type: 'kick' | 'snare' | 'hihat' | 'openhat' | 'clap' | 'bass' | 'synth' | 'perc';
+  type: 'kick' | 'snare' | 'hihat' | 'openhat' | 'clap' | 'bass' | 'synth' | 'perc' | 'guitar' | 'piano';
   parameters: Record<string, number>;
 }
 
@@ -93,6 +93,22 @@ export const DRUM_KIT_PRESETS: Record<KitPreset, DrumKitPresetConfig> = {
           duration: 0.12,
         },
       },
+      guitar: {
+        type: 'guitar',
+        parameters: {
+          baseFreq: 164.81,
+          duration: 1.2,
+          brightness: 0.8,
+        },
+      },
+      piano: {
+        type: 'piano',
+        parameters: {
+          baseFreq: 261.63,
+          duration: 2.5,
+          brightness: 0.9,
+        },
+      },
     },
   },
 
@@ -168,6 +184,22 @@ export const DRUM_KIT_PRESETS: Record<KitPreset, DrumKitPresetConfig> = {
           startFreq: 700,
           endFreq: 180,
           duration: 0.14,
+        },
+      },
+      guitar: {
+        type: 'guitar',
+        parameters: {
+          baseFreq: 164.81,
+          duration: 1.2,
+          brightness: 0.7,
+        },
+      },
+      piano: {
+        type: 'piano',
+        parameters: {
+          baseFreq: 261.63,
+          duration: 2.5,
+          brightness: 0.85,
         },
       },
     },
@@ -247,6 +279,22 @@ export const DRUM_KIT_PRESETS: Record<KitPreset, DrumKitPresetConfig> = {
           duration: 0.1,
         },
       },
+      guitar: {
+        type: 'guitar',
+        parameters: {
+          baseFreq: 164.81,
+          duration: 1.2,
+          brightness: 0.85,
+        },
+      },
+      piano: {
+        type: 'piano',
+        parameters: {
+          baseFreq: 261.63,
+          duration: 2.5,
+          brightness: 0.95,
+        },
+      },
     },
   },
 
@@ -324,6 +372,22 @@ export const DRUM_KIT_PRESETS: Record<KitPreset, DrumKitPresetConfig> = {
           duration: 0.11,
         },
       },
+      guitar: {
+        type: 'guitar',
+        parameters: {
+          baseFreq: 164.81,
+          duration: 1.2,
+          brightness: 0.75,
+        },
+      },
+      piano: {
+        type: 'piano',
+        parameters: {
+          baseFreq: 261.63,
+          duration: 2.5,
+          brightness: 0.88,
+        },
+      },
     },
   },
 
@@ -399,6 +463,22 @@ export const DRUM_KIT_PRESETS: Record<KitPreset, DrumKitPresetConfig> = {
           startFreq: 800,
           endFreq: 200,
           duration: 0.15,
+        },
+      },
+      guitar: {
+        type: 'guitar',
+        parameters: {
+          baseFreq: 164.81,
+          duration: 1.2,
+          brightness: 0.8,
+        },
+      },
+      piano: {
+        type: 'piano',
+        parameters: {
+          baseFreq: 261.63,
+          duration: 2.5,
+          brightness: 0.9,
         },
       },
     },

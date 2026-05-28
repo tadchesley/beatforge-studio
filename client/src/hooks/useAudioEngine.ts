@@ -3,7 +3,7 @@
 
 import { useRef, useCallback, useEffect } from 'react';
 
-export type InstrumentType = 'kick' | 'snare' | 'hihat' | 'openhat' | 'clap' | 'bass' | 'synth' | 'perc';
+export type InstrumentType = 'kick' | 'snare' | 'hihat' | 'openhat' | 'clap' | 'bass' | 'synth' | 'perc' | 'guitar' | 'piano';
 
 export interface AudioEngine {
   playSound: (instrument: InstrumentType, velocity?: number) => void;
@@ -208,6 +208,131 @@ function createPerc(ctx: AudioContext, velocity = 1) {
   osc.stop(now + 0.15);
 }
 
+function createGuitar(ctx: AudioContext, velocity = 1) {
+  // Simulate guitar string pluck with multiple harmonics
+  const now = ctx.currentTime;
+  const duration = 1.2;
+  
+  // Create multiple oscillators for rich harmonic content
+  const osc1 = ctx.createOscillator();
+  const osc2 = ctx.createOscillator();
+  const osc3 = ctx.createOscillator();
+  
+  const gain1 = ctx.createGain();
+  const gain2 = ctx.createGain();
+  const gain3 = ctx.createGain();
+  const masterGain = ctx.createGain();
+  
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(3500, now);
+  filter.frequency.exponentialRampToValueAtTime(1200, now + duration);
+  filter.Q.value = 1.5;
+  
+  // Fundamental frequency (E3 = 164.81 Hz)
+  const baseFreq = 164.81;
+  
+  osc1.type = 'triangle';
+  osc1.frequency.setValueAtTime(baseFreq, now);
+  osc1.frequency.exponentialRampToValueAtTime(baseFreq * 0.98, now + duration);
+  
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(baseFreq * 2, now);
+  osc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.98, now + duration);
+  
+  osc3.type = 'sine';
+  osc3.frequency.setValueAtTime(baseFreq * 3, now);
+  osc3.frequency.exponentialRampToValueAtTime(baseFreq * 2.98, now + duration);
+  
+  // Connect oscillators
+  osc1.connect(gain1);
+  osc2.connect(gain2);
+  osc3.connect(gain3);
+  
+  gain1.connect(filter);
+  gain2.connect(filter);
+  gain3.connect(filter);
+  filter.connect(masterGain);
+  masterGain.connect(ctx.destination);
+  
+  // Envelope: fast attack, slow decay
+  const attackTime = 0.01;
+  gain1.gain.setValueAtTime(0, now);
+  gain1.gain.linearRampToValueAtTime(velocity * 0.6, now + attackTime);
+  gain1.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  
+  gain2.gain.setValueAtTime(0, now);
+  gain2.gain.linearRampToValueAtTime(velocity * 0.3, now + attackTime);
+  gain2.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  
+  gain3.gain.setValueAtTime(0, now);
+  gain3.gain.linearRampToValueAtTime(velocity * 0.15, now + attackTime);
+  gain3.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  
+  masterGain.gain.setValueAtTime(velocity * 0.7, now);
+  
+  osc1.start(now);
+  osc2.start(now);
+  osc3.start(now);
+  
+  osc1.stop(now + duration);
+  osc2.stop(now + duration);
+  osc3.stop(now + duration);
+}
+
+function createPiano(ctx: AudioContext, velocity = 1) {
+  // Simulate piano with multiple harmonics and complex envelope
+  const now = ctx.currentTime;
+  const duration = 2.5;
+  
+  // Create multiple sine waves for harmonic richness
+  const oscs: OscillatorNode[] = [];
+  const gains: GainNode[] = [];
+  const harmonics = [1, 2, 3, 4, 5, 7, 9]; // Harmonic series
+  const baseFreq = 261.63; // Middle C
+  
+  const masterGain = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(8000, now);
+  filter.frequency.exponentialRampToValueAtTime(2000, now + duration);
+  filter.Q.value = 2;
+  
+  // Create harmonics
+  harmonics.forEach((harmonic: number, idx: number) => {
+    const osc: OscillatorNode = ctx.createOscillator();
+    const gain: GainNode = ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(baseFreq * harmonic, now);
+    
+    // Slight frequency modulation for realism
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * harmonic * 0.995, now + duration);
+    
+    osc.connect(gain);
+    gain.connect(filter);
+    
+    // Amplitude decreases for higher harmonics
+    const amplitude = velocity * (1 / (idx + 1)) * 0.4;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(amplitude, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    
+    oscs.push(osc);
+    gains.push(gain);
+  });
+  
+  filter.connect(masterGain);
+  masterGain.connect(ctx.destination);
+  masterGain.gain.setValueAtTime(velocity * 0.8, now);
+  
+  // Start all oscillators
+  oscs.forEach((osc: OscillatorNode) => osc.start(now));
+  
+  // Stop all oscillators
+  oscs.forEach((osc: OscillatorNode) => osc.stop(now + duration));
+}
+
 export function useAudioEngine(): AudioEngine {
   const ctxRef = useRef<AudioContext | null>(null);
 
@@ -234,6 +359,8 @@ export function useAudioEngine(): AudioEngine {
         case 'bass': createBass(ctx, v); break;
         case 'synth': createSynth(ctx, v); break;
         case 'perc': createPerc(ctx, v); break;
+        case 'guitar': createGuitar(ctx, v); break;
+        case 'piano': createPiano(ctx, v); break;
       }
     } catch (e) {
       console.warn('Audio error:', e);

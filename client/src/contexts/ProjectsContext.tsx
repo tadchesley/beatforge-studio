@@ -54,6 +54,8 @@ const CLAP_PATTERN =    [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
 const BASS_PATTERN =    [1,0,0,1, 0,0,0,0, 1,0,0,0, 0,1,0,0];
 const SYNTH_PATTERN =   [0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,1];
 const PERC_PATTERN =    [0,0,1,0, 0,0,0,1, 0,0,1,0, 0,0,0,0];
+const GUITAR_PATTERN =  [1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+const PIANO_PATTERN =   [0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0];
 
 function makeSteps(pattern: number[]): TrackStep[] {
   return pattern.map(v => ({ active: v === 1, velocity: 100 }));
@@ -68,6 +70,8 @@ const DEFAULT_TRACKS: Omit<Track, 'id'>[] = [
   { name: 'Bass', instrument: 'bass', color: '#FF4488', volume: 85, muted: false, steps: makeSteps(BASS_PATTERN) },
   { name: 'Synth Lead', instrument: 'synth', color: '#44DDFF', volume: 75, muted: false, steps: makeSteps(SYNTH_PATTERN) },
   { name: 'Perc', instrument: 'perc', color: '#88FF44', volume: 65, muted: false, steps: makeSteps(PERC_PATTERN) },
+  { name: 'Guitar', instrument: 'guitar', color: '#FF9933', volume: 70, muted: false, steps: makeSteps(GUITAR_PATTERN) },
+  { name: 'Piano', instrument: 'piano', color: '#FF33CC', volume: 75, muted: false, steps: makeSteps(PIANO_PATTERN) },
 ];
 
 function makeTracks(): Track[] {
