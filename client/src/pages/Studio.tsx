@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useProjects, Track } from "@/contexts/ProjectsContext";
 import { useAudioEngine, InstrumentType } from "@/hooks/useAudioEngine";
+import { PRESET_LIST, KitPreset, DRUM_KIT_PRESETS } from "@/hooks/useDrumKitPresets";
 import { toast } from "sonner";
 import {
   Play, Square, SkipBack, SkipForward, Save,
@@ -50,6 +51,7 @@ export default function Studio() {
   const [activeTab, setActiveTab] = useState<'sequencer' | 'pads' | 'mixer'>('sequencer');
   const [activePad, setActivePad] = useState<number | null>(null);
   const [spectrumActive, setSpectrumActive] = useState(false);
+  const [currentPreset, setCurrentPreset] = useState<KitPreset>('trap-808');
 
   // Project state (local copy for editing)
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -139,6 +141,11 @@ export default function Studio() {
     setActivePad(idx);
     playSound(PAD_INSTRUMENTS[idx], 1);
     setTimeout(() => setActivePad(null), 150);
+  };
+
+  const switchPreset = (preset: KitPreset) => {
+    setCurrentPreset(preset);
+    toast.success(`Switched to ${DRUM_KIT_PRESETS[preset].name}`);
   };
 
   const handleSave = () => {
@@ -275,7 +282,27 @@ export default function Studio() {
           ))}
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-3">
+          {/* Drum Kit Preset Selector */}
+          <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1.5">
+            <span className="text-xs text-white/40 font-['Fira_Code'] uppercase tracking-wider">Kit:</span>
+            <select
+              value={currentPreset}
+              onChange={(e) => {
+                const newPreset = e.target.value as KitPreset;
+                setCurrentPreset(newPreset);
+                toast.success(`Switched to ${DRUM_KIT_PRESETS[newPreset].name}`);
+              }}
+              className="bg-white/10 border border-white/10 rounded px-2 py-1 text-xs text-white/80 hover:text-white hover:border-white/20 transition-colors cursor-pointer focus:outline-none focus:border-[#00D4FF]/50"
+            >
+              {PRESET_LIST.map(preset => (
+                <option key={preset.id} value={preset.id} className="bg-[#0A0D18] text-white">
+                  {preset.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <Badge className={`text-xs font-['Fira_Code'] ${isPlaying ? 'bg-[#00FF88]/15 text-[#00FF88] border-[#00FF88]/30' : 'bg-white/5 text-white/30 border-white/10'}`}>
             {isPlaying ? '● PLAYING' : '■ STOPPED'}
           </Badge>
